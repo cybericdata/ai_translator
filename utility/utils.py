@@ -2,6 +2,10 @@ import os
 from typing import List
 from langchain_core.documents import Document
 from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader
+import sqlite3
+from datetime import datetime
+
+DB_NAME = "hiv_rag_app.db"
 
 
 def load_documents(folder_path: str) -> List[Document]:
@@ -17,3 +21,11 @@ def load_documents(folder_path: str) -> List[Document]:
             continue
         documents.extend(loader.load())
     return documents
+
+def docs2str(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
+def get_db_connection():
+    conn = sqlite3.connect(DB_NAME)
+    conn.row_factory = sqlite3.Row
+    return conn
